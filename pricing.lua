@@ -1,0 +1,2 @@
+-- Price setting algorithm
+-- price change = ln[(numberOfPurchases + targetStockLevel)/numberOfSales]
