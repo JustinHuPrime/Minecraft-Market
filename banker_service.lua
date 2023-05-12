@@ -21,7 +21,7 @@ local function ensureAccount(uuid)
     end
 end
 
-print("Banker started with " .. #accounts .. " accounts")
+print("Banker started")
 
 while true do
     local _, _, _, replyChannel, message, _ = os.pullEvent("modem_message")
