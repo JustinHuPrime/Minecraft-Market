@@ -41,28 +41,28 @@ while true do
   if message.type == "query" then
     ensurePrice(message.name)
 
-    modem.transmit(replyChannel, channels.PRICER_CHANNEL, prices[name].price)
-    print("Query for " .. message.name .. " = " .. math.floor(prices[name].price) .. " IC")
+    modem.transmit(replyChannel, channels.PRICER_CHANNEL, prices[message.name].price)
+    print("Query for " .. message.name .. " = " .. math.floor(prices[message.name].price) .. " IC")
   elseif message.type == "sell" then
     ensurePrice(message.name)
 
     prices[message.name].sold = prices[message.name].sold + message.quantity
     updatePrice(message.name)
 
-    modem.transmit(replyChannel, channels.PRICER_CHANNEL, prices[name].price)
+    modem.transmit(replyChannel, channels.PRICER_CHANNEL, prices[message.name].price)
     savePrices()
     print("Customer sold " ..
-      message.quantity .. "x " .. message.name .. " = " .. math.floor(prices[name].price) .. " IC")
+      message.quantity .. "x " .. message.name .. " = " .. math.floor(prices[message.name].price) .. " IC")
   elseif message.type == "buy" then
     ensurePrice(message.name)
 
     prices[message.name].bought = prices[message.name].bought + message.quantity
     updatePrice(message.name)
 
-    modem.transmit(replyChannel, channels.PRICER_CHANNEL, prices[name].price)
+    modem.transmit(replyChannel, channels.PRICER_CHANNEL, prices[message.name].price)
     savePrices()
     print("Customer bought " ..
-      message.quantity .. "x " .. message.name .. " = " .. math.floor(prices[name].price) .. " IC")
+      message.quantity .. "x " .. message.name .. " = " .. math.floor(prices[message.name].price) .. " IC")
   else
     -- bad message
     modem.transmit(replyChannel, channels.PRICER_CHANNEL, "bad message")
