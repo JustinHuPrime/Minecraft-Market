@@ -33,7 +33,7 @@ local PRICE_FLOOR = 1
 local PRICE_CEILING = 100
 local function updatePrice(name, quantity)
   prices[name].price = math.min(math.max(prices[name].price +
-    quantity * PRICE_DELTA_SCALE * math.log(prices[name].bought / prices[name].sold, math.exp(1)), PRICE_FLOOR),
+      quantity * PRICE_DELTA_SCALE * math.log(prices[name].bought / prices[name].sold, math.exp(1)), PRICE_FLOOR),
     PRICE_CEILING)
 end
 
@@ -50,7 +50,7 @@ while true do
     ensurePrice(message.name)
 
     prices[message.name].sold = prices[message.name].sold + message.quantity
-    updatePrice(message.name)
+    updatePrice(message.name, message.quantity)
 
     modem.transmit(replyChannel, channels.PRICER_CHANNEL, prices[message.name].price)
     savePrices()
@@ -60,7 +60,7 @@ while true do
     ensurePrice(message.name)
 
     prices[message.name].bought = prices[message.name].bought + message.quantity
-    updatePrice(message.name)
+    updatePrice(message.name, message.quantity)
 
     modem.transmit(replyChannel, channels.PRICER_CHANNEL, prices[message.name].price)
     savePrices()

@@ -26,13 +26,13 @@ end
 while true do
   term.clear()
   term.setCursorPos(1, 1)
-  print("Press enter to begin...")
+  print("Approach the terminal and press enter to begin...")
   io.read()
   local player = findPlayer()
   if player ~= nil then
     while true do
       print("Hello, " .. player.name)
-      print("Your balance is " .. math.floor(banker.query(modem, channel, player.uuid)) / 100)
+      print("Your balance is " .. math.floor(banker.query(modem, channel, player.uuid)) / 100 .. " IC")
 
       print("Would you like to")
       print("[D]eposit cash")
@@ -130,7 +130,7 @@ while true do
               record.quantity .. "x " .. name .. " @ " .. record.unitPrice / 100 .. " IC = " .. stackPrice / 100 .. " IC")
           end
           print("Buying all for " .. total / 100 .. " IC")
-          print("Continue?")
+          print("Continue? (y/n)")
           local continue = string.lower(io.read())
 
           if continue == "y" or continue == "yes" then
