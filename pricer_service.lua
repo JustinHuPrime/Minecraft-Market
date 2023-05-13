@@ -16,7 +16,7 @@ local function savePrices()
   pricesFile:close()
 end
 
-local INITIAL_PRICE = 10
+local INITIAL_PRICE = 1000
 local TARGET_STOCK_LEVEL = 4096
 local function ensurePrice(name)
   if prices[name] == nil then
@@ -28,7 +28,7 @@ local function ensurePrice(name)
   end
 end
 
-local PRICE_DELTA_SCALE = 0.01
+local PRICE_DELTA_SCALE = 1
 local function updatePrice(name, quantity)
   prices[name].price = prices[name].price +
       quantity * PRICE_DELTA_SCALE * math.log(prices[name].bought / prices[name].sold, math.exp(1))
