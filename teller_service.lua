@@ -5,7 +5,7 @@ local channels = require("channels")
 local modem = peripheral.wrap("top") or error("No modem attached", 0)
 modem.open(channels.TELLER_CHANNEL)
 
-local trash = peripheral.wrap("expandedstorage:obsidian_barrel_0") or error("No trash can found", 0)
+local trash = peripheral.wrap("modern_industrialization:configurable_chest_12") or error("No trash can found", 0)
 
 local hundred = peripheral.wrap("modern_industrialization:steel_barrel_0") or error("No 100 IC bin found", 0)
 local fifty = peripheral.wrap("modern_industrialization:steel_barrel_1") or error("No 50 IC bin found", 0)
@@ -35,16 +35,30 @@ while true do
   if message.type == "deposit" then
     local chest = peripheral.wrap(message.chest) or error("Bad chest to deposit from", 0)
     local total = 0
+    local contaminated = false
     for slot = 1, chest.size() do
-      local stackValue = notes.stackValue(chest.getItemDetail(slot))
-      if stackValue ~= 0 then
-        total = total + stackValue
-        chest.pushItems(peripheral.getName(trash), slot)
+      local item = chest.getItemDetail(slot)
+      if item ~= nil then
+        local stackValue = notes.stackValue(item)
+        if stackValue ~= 0 then
+          total = total + stackValue
+        else
+          contaminated = true
+        end
       end
     end
 
-    modem.transmit(replyChannel, channels.TELLER_CHANNEL, total)
-    print("Deposited " .. total / 100 .. " IC from " .. peripheral.getName(chest))
+    if not contaminated then
+      while trash.pullItem(peripheral.getName(chest), nil, nil) ~= 0 do
+        -- intentionally empty
+      end
+
+      modem.transmit(replyChannel, channels.TELLER_CHANNEL, total)
+      print("Deposited " .. total / 100 .. " IC from " .. peripheral.getName(chest))
+    else
+      modem.transmit(replyChannel, channels.TELLER_CHANNEL, "contaminated")
+      print("Refused deposit; " .. peripheral.getName(chest) .. " contaminated with other items")
+    end
   elseif message.type == "withdraw" then
     local chest = peripheral.wrap(message.chest) or error("Bad chest to withdraw into", 0)
     local amountLeft = message.amount

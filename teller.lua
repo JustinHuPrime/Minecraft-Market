@@ -5,7 +5,7 @@ local channels = require("channels")
 --- @param modem table a modem peripheral
 --- @param id integer a channel id to use
 --- @param chest string the name of the chest peripheral
---- @return number amount how many cents were deposited
+--- @return number|string amount how many cents were deposited, or "contaminated"
 local function deposit(modem, id, chest)
   modem.open(id)
   modem.transmit(channels.TELLER_CHANNEL, id, { type = "deposit", chest = chest })

@@ -45,9 +45,13 @@ while true do
 
       if selection == "d" or selection == "deposit" then
         local amountDeposited = teller.deposit(modem, channel, peripheral.getName(chest))
-        banker.deposit(modem, channel, player.uuid, amountDeposited)
+        if amountDeposited ~= "contaminated" then
+          banker.deposit(modem, channel, player.uuid, amountDeposited)
 
-        print("Deposited " .. amountDeposited / 100 .. " IC")
+          print("Deposited " .. amountDeposited / 100 .. " IC")
+        else
+          print("Remove non-banknote items from chest and try again")
+        end
       elseif selection == "w" or selection == "withdraw" then
         print("How much would like like to withdraw?")
         local amountWithdrawn = tonumber(io.read())
