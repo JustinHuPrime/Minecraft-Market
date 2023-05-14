@@ -9,7 +9,8 @@ local stockTank = peripheral.wrap("modern_industrialization:quantum_tank_0") or 
 local useTank = peripheral.wrap("modern_industrialization:quantum_tank_1") or error("No use tank attached", 0)
 local turtleStorage = peripheral.wrap("modern_industrialization:configurable_chest_13") or
     error("No temp storage attached", 0)
-local replicator = peripheral.wrap("modern_industrialization:replicator_2") or error("No replicator attached", 0)
+local inputChest = peripheral.wrap("modern_industrialization:configurable_chest_15") or
+    error("No input chest attached", 0)
 local outputBarrel = peripheral.wrap("modern_industrialization:quantum_barrel_1") or
     error("No output barrel attached", 0)
 
@@ -20,7 +21,7 @@ while true do
 
   local chest = peripheral.wrap(message.chest) or error("Bad chest to get template from", 0)
 
-  local transferred = replicator.pullItem(peripheral.getName(chest), nil, 1) == 0
+  local transferred = inputChest.pullItem(peripheral.getName(chest), nil, 1) == 0
   if transferred ~= 0 then
     stockTank.pushFluid(peripheral.getName(useTank), 100 * message.quantity)
 
