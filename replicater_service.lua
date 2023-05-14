@@ -22,7 +22,7 @@ while true do
 
   local transferred = replicator.pullItem(peripheral.getName(chest), nil, 1) == 0
   if transferred ~= 0 then
-    wstockTank.pushFluid(peripheral.getName(useTank), 100 * message.quantity)
+    stockTank.pushFluid(peripheral.getName(useTank), 100 * message.quantity)
 
     while outputBarrel.items()[1] == nil or outputBarrel.items()[1].count < message.quantity do
       os.sleep(1)
