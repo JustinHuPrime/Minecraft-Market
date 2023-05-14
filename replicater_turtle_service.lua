@@ -12,9 +12,7 @@ print("Replicater turtle started")
 
 while true do
   local _, _, _, replyChannel, message, _ = os.pullEvent("modem_message")
-  if message == "insert" then
-    storage.pushItem("front", nil, 1)
-  elseif message == "extract" then
+  if message == "extract" then
     turtle.dig()
     if turtle.getItemDetail(1).name == "modern_industrialization:replicator" then
       turtle.select(1)

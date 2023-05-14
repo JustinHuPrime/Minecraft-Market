@@ -9,6 +9,7 @@ local stockTank = peripheral.wrap("modern_industrialization:quantum_tank_0") or 
 local useTank = peripheral.wrap("modern_industrialization:quantum_tank_1") or error("No use tank attached", 0)
 local turtleStorage = peripheral.wrap("modern_industrialization:configurable_chest_13") or
     error("No temp storage attached", 0)
+local replicator = peripheral.wrap("modern_industrialization:replicator_2") or error("No replicator attached", 0)
 local outputBarrel = peripheral.wrap("modern_industrialization:quantum_barrel_1") or
     error("No output barrel attached", 0)
 
@@ -19,11 +20,9 @@ while true do
 
   local chest = peripheral.wrap(message.chest) or error("Bad chest to get template from", 0)
 
-  local transferred = turtleStorage.pullItem(peripheral.getName(chest), nil, 1) == 0
+  local transferred = replicator.pullItem(peripheral.getName(chest), nil, 1) == 0
   if transferred ~= 0 then
-    modem.transmit(channels.REPLICATER_TURTLE_CHANNEL, 0, "insert")
-
-    stockTank.pushFluid(peripheral.getName(useTank), nil, 100 * message.quantity)
+    wstockTank.pushFluid(peripheral.getName(useTank), 100 * message.quantity)
 
     while outputBarrel.items()[1] == nil or outputBarrel.items()[1].count < message.quantity do
       os.sleep(1)
