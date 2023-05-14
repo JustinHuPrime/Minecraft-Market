@@ -4,6 +4,7 @@ local banker = require("banker")
 local teller = require("teller")
 local pricer = require("pricer")
 local stocker = require("stocker")
+local replicater = require("replicater")
 
 local modem = peripheral.wrap("bottom") or error("No modem attached", 0)
 local chestName, detectorName, channelName = ...
@@ -57,7 +58,7 @@ while true do
         local amountWithdrawn = tonumber(io.read())
 
         if amountWithdrawn ~= nil then
-          amountWithdrawn = amountWithdrawn * 100
+          amountWithdrawn = math.floor(amountWithdrawn * 100)
 
           local preBalance = banker.query(modem, channel, player.uuid)
 
@@ -159,8 +160,48 @@ while true do
           print("Detected item with NBT; refusing to buy")
         end
       elseif selection == "r" or selection == "replicate" then
-        -- TODO: implement
-        print("Sorry, replication services are not yet offered")
+        if #chest.list() == 1 then
+          local detail = nil
+          for slot = 1, chest.size() do
+            detail = chest.getItemDetail(slot)
+            if detail ~= nil then
+              break
+            end
+          end
+
+          if detail.nbt == nil then
+            if detail.name ~= "minecraft:written_book" then
+              if detail.tags == nil or detail.tags["modern_industrialization:replicator_blacklist"] == nil then
+                print("How many copies?")
+                local copies = tonumber(io.read())
+
+                if copies ~= nil then
+                  copies = math.floor(copies)
+
+                  local preBalance = banker.query(modem, channel, player.uuid)
+
+                  if preBalance > copies * 100 then
+                    -- commit transaction
+                    local actualCopies = replicater.replicate(modem, channel, peripheral.getName(chest), copies)
+                    local amountLeft = banker.withdraw(modem, channel, player.uuid, actualCopies * 100)
+
+                    print("You have " .. amountLeft / 100 .. " IC remaining in your account")
+                  end
+                else
+                  print("Could not parse number to replicate")
+                end
+              else
+                print("Detected unreplicable item; refusing to replicate")
+              end
+            else
+              print("Detected written book; refusing to replicate")
+            end
+          else
+            print("Detected item with NBT; refusing to replicate")
+          end
+        else
+          print("More than one stack present in chest; remove other stacks and try again")
+        end
       elseif selection == "q" or selection == "quit" then
         break
       else
